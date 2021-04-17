@@ -2,4 +2,4 @@
 Snake Game
 sdkbgfdjfkgb gdf
 
-mainu readmo
+mainu readme
