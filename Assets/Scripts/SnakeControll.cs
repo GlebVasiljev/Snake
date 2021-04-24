@@ -30,6 +30,8 @@ public class SnakeControll : MonoBehaviour
     public Animator SnakeEat;
     public GameObject SnakeDeath;
     public GameObject MovementController;
+    public GameObject Pause;
+    const float ChangeSpeed = 4;
     bool DeadSnake = false;
     bool IsRotation = false;
     bool MobileUp;
@@ -47,7 +49,7 @@ public class SnakeControll : MonoBehaviour
         Application.targetFrameRate = 60;
         Score.text = "Score: " + result;
         GameOverMenu.SetActive(false);
-        // StartCoroutine(SnakeMove());
+        StartCoroutine(SnakeMove());
     }
 
     void Update()
@@ -95,7 +97,7 @@ public class SnakeControll : MonoBehaviour
             IsRotation = true;
         }
 
-        Vector3 Rotation = Head.eulerAngles;
+        /* Vector3 Rotation = Head.eulerAngles;
 
 
         Rotation.z = DefRotate;
@@ -137,9 +139,10 @@ public class SnakeControll : MonoBehaviour
                 // body.BodyTransform.Translate(Vector2.right * speed * Time.deltaTime);
             }
 
-        }
+        }*/
         fps = 1 / Time.unscaledDeltaTime;
-        FPStext.text = "" + fps;
+        FPStext.text = "" + fps.ToString("00.00");
+        FPStext.text = "" + fps.ToString("00.00");
     }
 
     IEnumerator SnakeMove()
@@ -147,11 +150,14 @@ public class SnakeControll : MonoBehaviour
 
         while (true)
         {
+            
+            // float Speed = 1 / speed;
+            float Delta = 1 / DeltaSpeed;
+            yield return null;
+            if (Pause.activeInHierarchy)
+                continue;
             if (DeadSnake)
                 continue;
-            float Speed = 1 / speed;
-            float Delta = 1 / DeltaSpeed;
-            yield return new WaitForSeconds(Speed);
             if (IsRotation)
             {
                 Vector3 Rotation = Head.eulerAngles;
@@ -202,7 +208,7 @@ public class SnakeControll : MonoBehaviour
             switch (apple.Type)
             {
                 case AppleType.Golden:
-                    speed += 4;
+                    DeltaSpeed -= ChangeSpeed;
                     Invoke(nameof(Speedtime), 5);
                     break;
 
@@ -264,7 +270,7 @@ public class SnakeControll : MonoBehaviour
     }
     void Speedtime()
     {
-        speed -= 4;
+        DeltaSpeed += ChangeSpeed;
     }
     void Dead()
     {
@@ -314,5 +320,15 @@ public class SnakeControll : MonoBehaviour
 
         BodyList.Add(body);
 
+    }
+
+    public void PauseController()
+    {
+        Invoke(nameof(PauseDelay), 0.5f);
+    }
+
+    void PauseDelay()
+    {
+        Pause.gameObject.SetActive(false);
     }
 }
